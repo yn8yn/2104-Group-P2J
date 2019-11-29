@@ -7,9 +7,12 @@ ICT2104-Embedded Systems Programming
 - Since the project is currently in its startup phase, our team is attempting to build an MR2M robot with minimal materials and deploying it within a safe environment.
 
 ## What you need
-- MSP432
-- ESP8266
-
+- MSP432 Microcontroller
+- ESP8266 Wifi module 
+- HC-SR04 Ultrasonic Sensor
+- Motor Driver
+- 2 Motor
+- 2 IR Encoder
 
 ## Project setup
 To use our project, you have to install [Simplelink_msp432p4_sdk_3_30_00_13](http://www.ti.com/tool/SIMPLELINK-MSP432-SDK) library in your Code Composer Studio.
