@@ -10,34 +10,35 @@ ICT2104-Embedded Systems Programming
 - Code Composer
 
 ## What you need
-- MSP432
-- ESP8266
-- TB6612FNG Motor Controller
-- HC-SR01 Ultrasonic sensor
-- IR wheel encoder
-- Battery holder
-- Schematic (provided in the documentation)
+- MSP432 Microcontroller
+- ESP8266 Wifi module 
+>-  It's a wireless  [SoC](https://en.wikipedia.org/wiki/System_on_a_chip)
+>-   It has GPIO, I2C, ADC, SPI, PWM and some more
+>-   It's running at 80MHz
+>-   64KBytes of instruction RAM
+>-   96KBytes of data RAM
+>-   64KBytes boot ROM
+>-   The  [ESP8266 chip](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_ESP8266-Versions)  is made by  [Espressif](http://espressif.com/en/products/esp8266/)
+>-   [Modules](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_versions)  bearing this chip are made by various manufacturers
+- HC-SR04 Ultrasonic Sensor
+- Motor Driver
+- 2 Motor
+- 2 IR Encoder
 
 ## Project setup
 To use our project, you have to install  [Simplelink_msp432p4_sdk_3_30_00_13](http://www.ti.com/tool/SIMPLELINK-MSP432-SDK) library in your Code Composer Studio.
 
 ## How to use
-> Download or pull our source codes into your Code Composer Studio and launch the project
+> Download or pull our source codes into your Code Composer Studio and launch the project. 
+Project2104_Integrated consist of the project for the integrated ultrasonic sensor and motor, while Project2104_Wifi_Independent consists of the project for the standalone wifi.
 
 ## How to run the main program - Project2104_Integrated
 -   Follow the pin connected according to the provided schematic
 -   Run the main.c codes
 
-## ESP8266
--   It's a wireless  [SoC](https://en.wikipedia.org/wiki/System_on_a_chip)
--   It has GPIO, I2C, ADC, SPI, PWM and some more
--   It's running at 80MHz
--   64KBytes of instruction RAM
--   96KBytes of data RAM
--   64KBytes boot ROM
--   The  [ESP8266 chip](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_ESP8266-Versions)  is made by  [Espressif](http://espressif.com/en/products/esp8266/)
--   [Modules](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_versions)  bearing this chip are made by various manufacturers
-## How to run ESP8266 - Project2104_Wifi_Independent demo file
+
+### Important: How to run ESP8266 - Project2104_Wifi_Independent demo file
+
 - Ensure the wifi module and the computer that is running the codes are on the same network
 - Check wifi module’s IP address by using the ATCIFSR command in the comm. If not connected to any network, follow steps from here to connect. https://www.electronicshub.org/connect-esp8266-to-wifi/
 - Run the main.c codes
