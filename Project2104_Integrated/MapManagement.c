@@ -126,6 +126,9 @@ void displayMaps(){
 }
 
 void setCarPointer(int pointer){
+    /*
+    set car direction
+    */
     setPointer(pointer);
 }
 

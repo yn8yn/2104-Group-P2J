@@ -34,6 +34,12 @@ void initCarLocationmaps(){
 }
 
 void updateCarLocationMap(int boxes, int pointer){
+    /*
+    updates the car location map
+    params: 
+    - boxes: the number grid squares the robot has passed
+    - pointer: the direction the car is facing
+    */
 
     if (prevPointer != pointer) {  // check if robot pointer has changed direction
         prevPointer = pointer;

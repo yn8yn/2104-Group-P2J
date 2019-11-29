@@ -12,7 +12,7 @@
 
  void encoder_init();
  void encoder_right(void);
- float getSpeed(void);
+
  void minuteDelay(void);
  void changeRev(void);
 

@@ -2,7 +2,7 @@
  * wifi.h
  *
  *  Created on: 28 Nov 2019
- *      Author: adilah
+ *      Author: Ramya & Yi Ning
  */
 
 #ifndef WIFI_H_

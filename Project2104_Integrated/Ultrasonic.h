@@ -12,6 +12,11 @@
 #include "MapManagement.h"
 int continues;
 
+
+/*
+initilise and create Ultrasonic sensor monitoring task
+
+*/
 void US_init(void);
 void callTrigger();
 int getAverageDistance(int distance[10]);

@@ -31,7 +31,12 @@ void initObstaclemaps(){
 }
 
 int updateObstacleMap(int* position, int pointer){
-
+    /*
+    updates the obstacle map
+    params: 
+    - position: the current position of th robot in the 2m x 2m map
+    - pointer: the direction the car is facing
+    */
     if (prevPointer != pointer) {  // check if robot pointer has changed direction
         prevPointer = pointer;
     }

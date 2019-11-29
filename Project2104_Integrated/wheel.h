@@ -11,7 +11,9 @@
 #ifndef WHEEL_H_
 #define WHEEL_H_
 
-
+/*
+Motor Control API
+*/
 
 
 void init_wheel(uint16_t inputL, uint16_t inputR,uint16_t inputAL, uint16_t inputAR,uint16_t pwma,uint16_t pwmb,uint16_t stby);

@@ -2,7 +2,7 @@
  * wifi.c
  *
  *  Created on: 28 Nov 2019
- *      Author: adilah
+ *      Author: Ramya & Yi Ning
  */
 
 #include <wifi.h>

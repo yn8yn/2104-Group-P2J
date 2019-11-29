@@ -20,13 +20,16 @@ uint16_t STBY; //p4.4
 void delayMsW(int n);
 
 void init_wheel(uint16_t inputL, uint16_t inputR,uint16_t inputAL, uint16_t inputAR,uint16_t pwma,uint16_t pwmb,uint16_t stby){
-    AIN1=inputAL;
-    AIN2=inputAR;
-    BIN1=inputL;
-    BIN2=inputR;
-    PWM1=pwma;
-    PWM2=pwmb;
-    STBY=stby;
+    /*
+    initialise wheel ports
+    */
+    AIN1=inputAL;   //input 1 of motorA
+    AIN2=inputAR;   //input 2 of motorA
+    BIN1=inputL;    //input 1 of motorB
+    BIN2=inputR;    //input 2 of motorB
+    PWM1=pwma;      //pwm pin of motorA
+    PWM2=pwmb;      //pwm pin of motorB
+    STBY=stby;      //standby
 
     P4DIR=0;
     P4OUT=0;
@@ -37,20 +40,22 @@ void init_wheel(uint16_t inputL, uint16_t inputR,uint16_t inputAL, uint16_t inpu
 }
 
 void TA1_0_IRQHandler(void){
-    if(TIMER_A2->CCR[3]>=PWM_PERIOD && TIMER_A2->CCR[3]>(PWM_PERIOD/2)){
+    //check if timerA2 ccr3 is == tp pwm_period, gradually decrease value if yes. 
+    //this is to give the initial boost to start the program but slows it down as the mapping progresses
+    if(TIMER_A2->CCR[3]>=PWM_PERIOD && TIMER_A2->CCR[3]>(PWM_PERIOD/2)){    
         TIMER_A2->CCR[3]-=100;
     }
     if((P2->IN&BIT6)==BIT6)
         {
-            P4->OUT|=BIT6;          // ON LED1
+            P4->OUT|=BIT6;          //set pwma and pwmb as high
             P4->OUT|=BIT1;
-            P1->OUT|=BIT0;
+           // P1->OUT|=BIT0;        //monitor LED 
         }
-        else if((P2->IN&BIT6)==0)
+        else if((P2->IN&BIT6)==0)   //set pwma and pwmb as low
         {
             P4->OUT&=~BIT6;         // OFF LED1
             P4->OUT&=~BIT1;
-            P1->OUT&=~BIT0;
+            //P1->OUT&=~BIT0;
         }
     TIMER_A1->CCTL[0] &= ~TIMER_A_CCTLN_CCIFG;
 }
@@ -58,7 +63,6 @@ void TA1_0_IRQHandler(void){
 void forward(){
     isForward=1;
     P4OUT |= STBY+AIN1+PWM1+BIN2+PWM2;
-//    P4OUT |= STBY+AIN1+BIN2;
     P4OUT &=~AIN2+~BIN1;
 
 
@@ -70,7 +74,7 @@ void forwardlp(){
     isForward=1;
     P4OUT |= STBY+AIN1+BIN2;
     P4OUT &=~AIN2+~BIN1+~PWM2;
-//    P4OUT =
+
 
 
 
@@ -105,7 +109,7 @@ void turnright(){
 
     //in1 in2 pwm out1 out2
     //H   L    H-> H   L
-    //EACH WHEEL TURN DIFF DIRECTION
+    //EACH WHEEL TURN DIFFERENT DIRECTION
 
 }
 
@@ -121,7 +125,7 @@ void turnleft(){
 
     //in1 in2 pwm out1 out2
     //L   H    H-> L   H
-    //EACH WHEEL TURN DIFF DIRECTION
+    //EACH WHEEL TURN DIFFERENT DIRECTION
 
 }
 
@@ -139,9 +143,9 @@ void stop(){
 
 void pwm_init(){
     //pwm_period 1500
-    P6->DIR  |=BIT6 ;     // P2.6 - P2.7 output
-    P6->SEL0 |=BIT6;     // P2.6 - P2.7  Port Map functions  = 1
-    P6->SEL1 &= ~ BIT6;   // P2.6 - P2.7 default PM functions = TimerA CCRx = 0,  10h in technic docs is secondary module, this is taken to control pwm for led
+    P6->DIR  |=BIT6 ;     // P6.6 output
+    P6->SEL0 |=BIT6;     // P6.6  Port Map functions  = 1
+    P6->SEL1 &= ~ BIT6;   // P6.6 default PM functions = TimerA CCRx = 0,  
 
     CS->KEY = CS_KEY_VAL ;                      // Unlock CS module for register access
     CS->CTL0 = 0;                               // Reset tuning parameters
@@ -154,9 +158,8 @@ void pwm_init(){
     // Setup TA0
    TIMER_A2->CCR[0] = PWM_PERIOD;              // PWM Period = 1500/1500000sec = 1/1000 = 1ms, the length of time the light is on
    TIMER_A2->CCTL[3] = TIMER_A_CCTLN_OUTMOD_7; // CCR3 reset/set
-   TIMER_A2->CCR[3] = PWM_PERIOD;              // CCR3 PWM duty cycle, 0.5ms -----------control pwm speed, but at pwm_period/2, the motor can start, must jolt
-   TIMER_A2->CCTL[4] = TIMER_A_CCTLN_OUTMOD_7; // CCR4 reset/set
-   TIMER_A2->CCR[4] = 0;                       // CCR4 PWM duty cycle
+   TIMER_A2->CCR[3] = PWM_PERIOD;              // CCR3 PWM duty cycle, 0.5ms -----------control pwm speed
+
 
    TIMER_A2->CTL = TIMER_A_CTL_SSEL__SMCLK|    // SMCLK
                    TIMER_A_CTL_MC_1 |          // Up mode
@@ -182,7 +185,7 @@ void delayMsW(int n)
 {
     int i;
 
-    TIMER32_1->LOAD = 3000 - 1;// ---------------------------------------change to timer a2
+    TIMER32_1->LOAD = 3000 - 1;
     TIMER32_1->CONTROL = 0xC2; //- register T32, bit 1100 0010,
 
     for(i = 0; i < n; i++) {

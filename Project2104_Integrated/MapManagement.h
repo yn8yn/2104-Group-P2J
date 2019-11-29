@@ -13,7 +13,7 @@
 #include "Obstacle.h"
 #include "Car.h"
 #include "wheel.h"
-#include "wifi.h"
+//#include "wifi.h"  //commented out as the wifi integration was not compatible
 int isForward;
 
 void mapManagementInit();

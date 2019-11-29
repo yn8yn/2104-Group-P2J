@@ -35,19 +35,19 @@ void US_init()
     __enable_interrupt();
     //SET TIMER_A TO
     TA0CCR0 = 60000;
-//    printf("init");
+
     continues=1;
     callTrigger();
 }
 void callTrigger()
 {
-    if(continues==1){
-        P2OUT |= BIT4;
+    if(continues==1){   //if condition is continue
+        P2OUT |= BIT4;  //set trigger 
         __delay_cycles(10);
-        P2OUT &= ~BIT4;
+        P2OUT &= ~BIT4; //unset trigger
         TIMER_A0->CTL |= TIMER_A_CTL_CLR;
     }
-//    printf("init");
+
 
 }
 void delayCycles(int n)
@@ -68,20 +68,19 @@ void delayCycles(int n)
 
 void PORT1_IRQHandler(void)
 {
-    if(P1->IFG & BIT1){
+    if(P1->IFG & BIT1){     //to exit the program
         continues=0;
         stop();
-//        callTrigger();
-        displayMaps();
+        displayMaps();      //display all available maps
         exit(0);
     }
 
-    if (P1IFG & BIT5)
+    if (P1IFG & BIT5)       //if echo pin receives input
     {
-        sensor = TA0R / 3;
-        distanceU = sensor / 58;
+        sensor = TA0R / 3;                                      //retrieve sensor value
+        distanceU = sensor / 58;                                //calculate distance
         int rangeCount = 0;
-        for (rangeCount = 0; rangeCount < 10; rangeCount++)
+        for (rangeCount = 0; rangeCount < 10; rangeCount++)     //normalize the data
         {
             if (distanceU > 100)
             {
@@ -89,19 +88,19 @@ void PORT1_IRQHandler(void)
             }
             else
             {
-                sum_distance += distanceU;
+                sum_distance += distanceU;                      //update distance
                 usRange[rangeCount] = distanceU;
             }
         }
         average_distance = getAverageDistance(usRange);
 
-        checkDistance(average_distance, distanceU);
+        checkDistance(average_distance, distanceU);             //check if distance has fallen below 10cm
         forward();
         sensor = TA0R / 3;
 
-//      printf(("%d",)previous_distance);
+
         printf("%d\n", distanceU);
-//        __delay_cycles(20 * 60 * 1000);
+
         callTrigger();
     }
     P1IFG &= ~BIT5 +~BIT1;
@@ -117,31 +116,21 @@ int getAverageDistance(int distance[10])
     return average_distance;
 }
 void checkDistance(int x_average, int y_distance){
+    /*
+    check if distance has fallen below 10cm, trigger turn() if true, the update related maps
+    */
     if(y_distance<10){
         stop();
         updateObstacleDetectionMap();
         turnright();
         __delay_cycles(20 * 60 * 1000);
-        P2->OUT ^= BIT2;
+       // P2->OUT ^= BIT2;          //monitoring LED
         forward();
     }
     else{
         forward();
-        P1->OUT ^= BIT0;
+       // P1->OUT ^= BIT0;          //monitoring LED
 
     }
-//    //distance<10
-//    //turn the car
-//    //set delay so that the distance from sonar wont be read again until the car finish turning. so wont trigger another turn
-//    //forward()
-//    if (x_average > y_distance + 10){
-//        stop();
-//        updateObstacleDetectionMap();
-//        turnright();
-//        delayCycles
-//
-//    }
-//    else{
-//        forward();
-//    }
+
 }
