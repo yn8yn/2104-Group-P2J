@@ -1,0 +1,1 @@
+"./Car.obj" "./CarLocation.obj" "./Coverage.obj" "./MapManagement.obj" "./Obstacle.obj" "./Ultrasonic.obj" "./encoder.obj" "./main.obj" "./startup_msp432p401r_ccs.obj" "./system_msp432p401r.obj" "./testmap2.obj" "./wheel.obj" "../msp432p401r.cmd" -llibc.a 
