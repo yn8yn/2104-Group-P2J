@@ -12,14 +12,14 @@ ICT2104-Embedded Systems Programming
 ## What you need
 - MSP432 Microcontroller
 - ESP8266 Wifi module 
->-  It's a wireless  [SoC](https://en.wikipedia.org/wiki/System_on_a_chip)
->-   It has GPIO, I2C, ADC, SPI, PWM and some more
->-   It's running at 80MHz
->-   64KBytes of instruction RAM
->-   96KBytes of data RAM
->-   64KBytes boot ROM
->-   The  [ESP8266 chip](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_ESP8266-Versions)  is made by  [Espressif](http://espressif.com/en/products/esp8266/)
->-   [Modules](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_versions)  bearing this chip are made by various manufacturers
+    - It's a wireless  [SoC](https://en.wikipedia.org/wiki/System_on_a_chip)
+    - It has GPIO, I2C, ADC, SPI, PWM and some more
+    - It's running at 80MHz
+    - 64KBytes of instruction RAM
+    - 96KBytes of data RAM
+    - 64KBytes boot ROM
+    - The  [ESP8266 chip](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_ESP8266-Versions)  is made by  [Espressif](http://espressif.com/en/products/esp8266/)
+    - [Modules](https://github.com/esp8266/esp8266-wiki/wiki/Hardware_versions)  bearing this chip are made by various manufacturers
 - HC-SR04 Ultrasonic Sensor
 - Motor Driver
 - 2 Motor
