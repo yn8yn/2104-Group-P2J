@@ -2,7 +2,7 @@
  * wifi.c
  *
  *  Created on: 28 Nov 2019
- *      Author: Ramya & Yi Ning
+ *      Author: adilah
  */
 
 #include <wifi.h>
@@ -60,7 +60,7 @@ void initWIFIModule(void){
     MAP_Interrupt_enableMaster();
 
     /*Hard Reset ESP8266*/
-    ESP8266_HardReset();
+    ESP8266_HardReset(); //trigger blue light on the wifi module
     __delay_cycles(48000000);
 
     /*flush reset data, we do this because a lot of data received cannot be printed*/
@@ -68,7 +68,8 @@ void initWIFIModule(void){
 }
 
 void setupWIFI(void){
-    //  ESP8266_Terminal(); //Terminal to set up configurations manually
+    /*ESP8266 serial terminal to set up configurations manually, will not return*/
+    //  ESP8266_Terminal();
     while(!ESP8266_ConnectToAP("SIT-GUEST","3UIcF@uC")) //Keep trying to connect to wifi
     {
         MSPrintf(EUSCI_A0_BASE,ESP8266_Data); //AT+CWJAP
