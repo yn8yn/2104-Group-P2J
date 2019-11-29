@@ -29,7 +29,7 @@
 #define AT_CIUPDATE     "AT+CIUPDATE\r\n"
 #define IPD             "+IPD\r\n"
 
-char ESP8266_Buffer[ESP8266_BUFFER_SIZE];
+char ESP8266_Buffer[ESP8266_BUFFER_SIZE]; //define size of buffer
 
 bool ESP8266_WaitForAnswer(uint32_t Tries)
 {
@@ -59,14 +59,14 @@ bool ESP8266_WaitForAnswer(uint32_t Tries)
         __delay_cycles(2400);
     }
 
-    return false;
+    return false; //will time out
 }
 
-bool ESP8266_CheckConnection(void)
+bool ESP8266_CheckConnection(void)  //check if we have communication link between the MSP432 and the ESP8266
 {
-    MSPrintf(EUSCI_A2_BASE, AT);
+    MSPrintf(EUSCI_A2_BASE, AT); //Test AT startup
     __delay_cycles(12000);
-    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
     {
         return false;
     }
@@ -76,14 +76,14 @@ bool ESP8266_CheckConnection(void)
         return false;
     }
 
-    return true;
+    return true; //ESP8266_Buffer will return OK, communication succeeded
 }
 
 bool ESP8266_AvailableAPs(void) //API to list all the access point near you
 {
     MSPrintf(EUSCI_A2_BASE, AT_CWLAP);
     __delay_cycles(48000000);
-    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
     {
         return false;
     }
@@ -101,7 +101,7 @@ bool ESP8266_ConnectToAP(char *SSID, char *Password) //API to join access point
     MSPrintf(EUSCI_A2_BASE, "%s=\"%s\",\"%s\"\r\n", AT_CWJAP, SSID, Password);
 
     __delay_cycles(24000000);
-    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
     {
         return false;
     }
@@ -111,15 +111,16 @@ bool ESP8266_ConnectToAP(char *SSID, char *Password) //API to join access point
         return false;
     }
 
-    return true;
+    return true; //authentication the AP was successful
+    //the ESP8266 is ready to connect to a server and start sending and receiving data
 }
 
 bool ESP8266_EnableMultipleConnections(void) //API to enable for multiple connection to server
 {
-    MSPrintf(EUSCI_A2_BASE, "%s=1\r\n", AT_CIPMUX);
+    MSPrintf(EUSCI_A2_BASE, "%s=1\r\n", AT_CIPMUX); //set o 1 = enable MUX mode
 
     __delay_cycles(40000000);
-    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
     {
         return false;
     }
@@ -129,31 +130,31 @@ bool ESP8266_EnableMultipleConnections(void) //API to enable for multiple connec
         return false;
     }
 
-    return true;
+    return true; //successfully enabled
 }
 
-bool ESP8266_EstablishConnection(char ID, uint8_t type, char *address, char *port)
+bool ESP8266_EstablishConnection(char ID, uint8_t type, char *address, char *port) // Establish TCP connection or register UDP port and start a connection
 {
     char ct[3];
 
-    switch(type)
+    switch(type) //get 3 char user input
     {
-    case TCP:
+    case TCP:   //check if  input is TCP
         ct[0] = 'T';
         ct[1] = 'C';
         ct[2] = 'P';
         break;
-    case UDP:
+    case UDP:   //check if  input is UDP
         ct[0] = 'U';
         ct[1] = 'D';
         ct[2] = 'P';
         break;
     }
 
-    MSPrintf(EUSCI_A2_BASE, "%s=%c,\"%s\",\"%s\",%s\r\n", AT_CIPSTART, ID, ct, address, port);
+    MSPrintf(EUSCI_A2_BASE, "%s=%c,\"%s\",\"%s\",%s\r\n", AT_CIPSTART, ID, ct, address, port); //In Multiple connection mode
 
     __delay_cycles(24000000);
-    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))
+    if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
     {
         return false;
     }
@@ -165,6 +166,7 @@ bool ESP8266_EstablishConnection(char ID, uint8_t type, char *address, char *por
 
     return true;
 }
+
 bool ESP8266_EnableServer(void) //API to set up server
 {
 
@@ -181,17 +183,17 @@ bool ESP8266_EnableServer(void) //API to set up server
         return false;
     }
 
-    return true;
+    return true; //connected to port 80
 }
 
-bool ESP8266_SendData(char ID, char *Data, uint32_t DataSize) //API to send data to browser
+bool ESP8266_SendData(char ID, char *Data, uint32_t DataSize) //API to send data to server browser
 {
     char size[5];
 
     ltoa(DataSize, size);
-    MSPrintf(EUSCI_A2_BASE, "%s=0,%s\r\n", AT_CIPSEND, size);
+    MSPrintf(EUSCI_A2_BASE, "%s=0,%s\r\n", AT_CIPSEND, size); //DataSize sets the length of the message
 
-    __delay_cycles(24000000);
+    __delay_cycles(24000000); //20ms interval between each packet
     if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
     {
         return false;
@@ -215,9 +217,10 @@ bool ESP8266_SendData(char ID, char *Data, uint32_t DataSize) //API to send data
         return false;
     }
 
-    return true;
+    return true; //data sent
 }
-void ESP8266_Close(void) //API to close connection
+
+bool ESP8266_Close(void) //API to close connection
 {
     MSPrintf(EUSCI_A2_BASE, "%s=0\r\n", AT_CIPCLOSE);
 
@@ -239,8 +242,8 @@ void ESP8266_Terminal(void)
 {
     while(1)
     {
-        MSPgets(EUSCI_A0_BASE, ESP8266_Buffer, 128);
-        MSPrintf(EUSCI_A2_BASE, ESP8266_Buffer);
+        MSPgets(EUSCI_A0_BASE, ESP8266_Buffer, 128); //reads user's command from terminal
+        MSPrintf(EUSCI_A2_BASE, ESP8266_Buffer); //print on uart
 
         __delay_cycles(48000000);
         if(!ESP8266_WaitForAnswer(ESP8266_RECEIVE_TRIES))//exit if exceed number of tries
@@ -260,13 +263,13 @@ char *ESP8266_GetBuffer(void)
     return ESP8266_Buffer;
 }
 
-void ESP8266_HardReset(void)
+void ESP8266_HardReset(void) //reset ESP8266
 {
-    GPIO_Low(RESET_PORT, RESET_PIN);
+    GPIO_Low(RESET_PORT, RESET_PIN); //set pin to low -stop
 
     __delay_cycles(24000000);
 
-    GPIO_High(RESET_PORT, RESET_PIN);
+    GPIO_High(RESET_PORT, RESET_PIN);//set pin to high -restart
 }
 
 void wait(int N) //TIMER32 delay
